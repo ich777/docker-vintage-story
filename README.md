@@ -27,7 +27,6 @@ docker run --name VintageStory -d \
 	ich777/vintagestory
 ```
 
-
 This Docker was mainly edited for better use with Unraid, if you don't use Unraid you should definitely try it!
 
 #### Support Thread: https://forums.unraid.net/topic/79530-support-ich777-gameserver-dockers/
