@@ -2,6 +2,10 @@
 DL_URL="$(curl -s http://api.vintagestory.at/stable.json | jq '.' | grep server | grep local | head -1 | cut -d '"' -f4)"
 LAT_V=${DL_URL##*_}
 CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f 2)"
+if [ -z $LAT_V ]; then
+	echo "---Something went wrong, can't get latest version, putting server into sleep mode!---"
+	sleep infinity    
+fi
 
 echo "---Version Check---"
 if [ -z "$CUR_V" ]; then
@@ -20,8 +24,7 @@ elif [ "${LAT_V%.tar.gz}" != "$CUR_V" ]; then
 	echo "---Newer version found, installing!---"
 	rm ${DATA_DIR}/installed-$CUR_V
 	cd ${DATA_DIR}
-	shopt -s extglob
-	rm -rf !(data)
+	find . -maxdepth 1 -not -name 'data' -print0 | xargs -0 -I {} rm -R {} 2&>/dev/null
 	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-$LAT_V "$DL_URL" ; then
 		echo "---Successfully downloaded Vintage Story v${LAT_V%.tar.gz}---"
 	else
