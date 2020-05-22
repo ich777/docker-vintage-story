@@ -3,7 +3,7 @@ FROM ich777/mono-baseimage
 LABEL maintainer="admin@minenet.at"
 
 RUN apt-get update && \
-	apt-get -y install --no-install-recommends curl screen && \
+	apt-get -y install --no-install-recommends curl screen jq && \
 	rm -rf /var/lib/apt/lists/*
 
 ENV DATA_DIR="/vintagestory"
