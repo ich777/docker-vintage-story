@@ -7,7 +7,7 @@ RUN apt-get update && \
 	rm -rf /var/lib/apt/lists/*
 
 ENV DATA_DIR="/vintagestory"
-ENV EXTRA_PARAMS=""
+ENV GAME_PARAMS=""
 ENV UMASK=000
 ENV UID=99
 ENV GID=100
