@@ -1,4 +1,4 @@
-FROM ich777/docker-mono-baseimage
+FROM ich777/mono-baseimage
 
 LABEL maintainer="admin@minenet.at"
 
