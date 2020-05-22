@@ -3,7 +3,7 @@ This is a Basic Vintage Story Server it will download and install Vintage Story 
 
 UPDATE NOTICE: The container will check on every start/restart if there is a newer version available.
 
->**CONSOLE:** To connect to the console open up the terminal on the host machine and type in: 'docker exec -u vintagestory -ti <Name of your Container> screen -xS VintageStory' (without quotes) to exit the screen session press CTRL+A and then CTRL+D or simply close the terminal window in the first place.
+>**CONSOLE:** To connect to the console open up the terminal on the host machine and type in: 'docker exec -u vintagestory -ti Name of your Container screen -xS VintageStory' (without quotes) to exit the screen session press CTRL+A and then CTRL+D or simply close the terminal window in the first place.
 
 ## Env params
 | Name | Value | Example |
