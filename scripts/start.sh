@@ -20,11 +20,8 @@ chown -R ${UID}:${GID} /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
-	kill -SIGTERM "$(pidof vintagestory)"
-	tail --pid="$(pidof vintagestory)" -f 2>/dev/null
-	exit 143;
-
-	exit 143;
+	su $USER -c "screen -S VintageStory -X stuff '/stop^M'" >/dev/null
+	tail --pid="$(pidof mono)" -f 2>/dev/null
 }
 
 trap 'kill ${!}; term_handler' SIGTERM
