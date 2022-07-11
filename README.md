@@ -9,6 +9,7 @@ UPDATE NOTICE: The container will check on every start/restart if there is a new
 | Name | Value | Example |
 | --- | --- | --- |
 | DATA_DIR | Folder for gamefile | /vintagestory |
+| VS_CHANNEL | Select which release channel you want to use (valid values are 'stable', 'unstable' & 'pre' without quotes). | stable |
 | GAME_PARAMS | Extra startup Parameters if needed (leave empty if not needed) | |
 | UID | User Identifier | 99 |
 | GID | Group Identifier | 100 |
@@ -19,11 +20,12 @@ UPDATE NOTICE: The container will check on every start/restart if there is a new
 ```
 docker run --name VintageStory -d \
 	-p 42420:42420 \
+	--env 'VS_CHANNEL=stable' \
 	--env 'UID=99' \
 	--env 'GID=100' \
 	--env 'UMASK=000' \
 	--env 'DATA_PERM=770' \
-	--volume /mnt/cache/appdata/vintagestory:/vintagestory \
+	--volume /path/to/vintagestory:/vintagestory \
 	ich777/vintagestory
 ```
 
