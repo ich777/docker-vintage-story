@@ -1,7 +1,7 @@
 #!/bin/bash
-DL_URL="$(curl -s http://api.vintagestory.at/stable.json | jq '.' | grep server | grep local | head -1 | cut -d '"' -f4)"
+DL_URL="$(curl -s http://api.vintagestory.at/${VS_CHANNEL}.json | jq '.' | grep server | grep local | head -1 | cut -d '"' -f4)"
 LAT_V=${DL_URL##*_}
-CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f 2)"
+CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f2-)"
 if [ -z $LAT_V ]; then
 	echo "---Something went wrong, can't get latest version, putting server into sleep mode!---"
 	sleep infinity    
