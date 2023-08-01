@@ -26,8 +26,13 @@ chown -R ${UID}:${GID} ${DATA_DIR}
 
 echo "---Starting...---"
 term_handler() {
+    if [ -f "${DATA_DIR}/VintagestoryServer.exe" ]; then
+      killpid="$(pidof mono)"
+    elif [ -f "${DATA_DIR}/VintagestoryServer" ]; then
+      killpid="$(pidof VintagestoryServer)"
+    fi
 	su $USER -c "screen -S VintageStory -X stuff '/stop^M'" >/dev/null
-	tail --pid="$(pidof mono)" -f 2>/dev/null
+	tail --pid=$killpid -f /dev/null
 }
 
 trap 'kill ${!}; term_handler' SIGTERM
