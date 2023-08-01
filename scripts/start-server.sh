@@ -54,9 +54,12 @@ if [ -f "${DATA_DIR}/VintagestoryServer.exe" ]; then
   sleep 2
   screen -S watchdog -d -m /opt/scripts/start-watchdog.sh
   tail -f ${DATA_DIR}/masterLog.0
-else
+elif [ -f "${DATA_DIR}/VintagestoryServer" ]; then
   screen -S VintageStory -L -Logfile ${DATA_DIR}/masterLog.0 -d -m ${DATA_DIR}/VintagestoryServer --dataPath ${DATA_DIR}/data ${GAME_PARAMS}
   sleep 2
   screen -S watchdog -d -m /opt/scripts/start-watchdog.sh
   tail -f ${DATA_DIR}/masterLog.0
+else
+  echo "Can't find game executable, putting container into sleep mode!"
+  sleep infinity
 fi
