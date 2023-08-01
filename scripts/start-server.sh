@@ -49,7 +49,14 @@ screen -wipe 2&>/dev/null
 
 echo "---Starting Server---"
 cd ${DATA_DIR}
-screen -S VintageStory -L -Logfile ${DATA_DIR}/masterLog.0 -d -m mono VintagestoryServer.exe --dataPath ${DATA_DIR}/data ${GAME_PARAMS}
-sleep 2
-screen -S watchdog -d -m /opt/scripts/start-watchdog.sh
-tail -f ${DATA_DIR}/masterLog.0
+if [ -f "${DATA_DIR}/VintagestoryServer.exe" ]; then
+  screen -S VintageStory -L -Logfile ${DATA_DIR}/masterLog.0 -d -m mono VintagestoryServer.exe --dataPath ${DATA_DIR}/data ${GAME_PARAMS}
+  sleep 2
+  screen -S watchdog -d -m /opt/scripts/start-watchdog.sh
+  tail -f ${DATA_DIR}/masterLog.0
+else
+  screen -S VintageStory -L -Logfile ${DATA_DIR}/masterLog.0 -d -m ${DATA_DIR}/VintagestoryServer --dataPath ${DATA_DIR}/data ${GAME_PARAMS}
+  sleep 2
+  screen -S watchdog -d -m /opt/scripts/start-watchdog.sh
+  tail -f ${DATA_DIR}/masterLog.0
+fi
