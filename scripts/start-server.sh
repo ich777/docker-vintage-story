@@ -3,8 +3,12 @@ DL_URL="$(curl -s http://api.vintagestory.at/${VS_CHANNEL}.json | jq '.' | grep 
 LAT_V=${DL_URL##*_}
 CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f2-)"
 if [ -z $LAT_V ]; then
-	echo "---Something went wrong, can't get latest version, putting server into sleep mode!---"
-	sleep infinity    
+  if [ -z $CUR_V ]; then
+	  echo "---Something went wrong, can't get latest version and found no local version, putting server into sleep mode!---"
+	  sleep infinity    
+  fi
+  echo "---Can't get lateste version but found local version, continuing with local version..."
+  LAT_V=$CUR_V
 fi
 
 echo "---Version Check---"
