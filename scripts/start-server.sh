@@ -11,6 +11,8 @@ if [ -z $LAT_V ]; then
   LAT_V=$CUR_V
 fi
 
+rm -f ${DATA_DIR}/vintagestory-*
+
 echo "---Version Check---"
 if [ -z "$CUR_V" ]; then
 	echo "---Vintage Story not found, downloading...---"
