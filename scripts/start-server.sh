@@ -11,12 +11,11 @@ if [ -z $LAT_V ]; then
   LAT_V=$CUR_V
 fi
 
-rm -f ${DATA_DIR}/vintagestory-*
-
 echo "---Version Check---"
 if [ -z "$CUR_V" ]; then
 	echo "---Vintage Story not found, downloading...---"
 	cd ${DATA_DIR}
+	rm -f ${DATA_DIR}/vintagestory-*
 	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-$LAT_V "$DL_URL" ; then
 		echo "---Successfully downloaded Vintage Story v${LAT_V%.tar.gz}---"
 	else
@@ -31,6 +30,7 @@ elif [ "${LAT_V%.tar.gz}" != "$CUR_V" ]; then
 	rm ${DATA_DIR}/installed-$CUR_V
 	cd ${DATA_DIR}
 	find . -maxdepth 1 -not -name 'data' -print0 | xargs -0 -I {} rm -R {} 2&>/dev/null
+	rm -f ${DATA_DIR}/vintagestory-*
 	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-$LAT_V "$DL_URL" ; then
 		echo "---Successfully downloaded Vintage Story v${LAT_V%.tar.gz}---"
 	else
