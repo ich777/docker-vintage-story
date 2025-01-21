@@ -12,7 +12,9 @@ if [ -z $LAT_V ]; then
 fi
 
 echo "---Version Check---"
-if [ -z "$CUR_V" ]; then
+if [ "${DISABLE_UPDATES}" == "true" ]; then
+	echo "---Automatic Updates Disabled!---"
+elif [ -z "$CUR_V" ]; then
 	echo "---Vintage Story not found, downloading...---"
 	cd ${DATA_DIR}
 	rm -f ${DATA_DIR}/vintagestory-*
