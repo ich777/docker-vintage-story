@@ -11,6 +11,7 @@ RUN wget -q -O /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/c
 
 ENV DATA_DIR="/vintagestory"
 ENV VS_CHANNEL="stable"
+ENV STATIC_V=""
 ENV GAME_PARAMS=""
 ENV UMASK=000
 ENV UID=99
