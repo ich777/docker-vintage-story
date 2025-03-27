@@ -10,7 +10,7 @@ UPDATE NOTICE: The container will check on every start/restart if there is a new
 | --- | --- | --- |
 | DATA_DIR | Folder for gamefile | /vintagestory |
 | VS_CHANNEL | Select which release channel you want to use (valid values are 'stable' & 'unstable' without quotes). | stable |
-| STATIC_V | If needed enter a static version from VintageStory and the container will stay on that version (eg: '1.19.7' without quotes) | |
+| STATIC_V | If needed set a static version to prevent the container from updating (eg: '1.19.7' without quotes). Leave empty for automatic updates.  | |
 | GAME_PARAMS | Extra startup Parameters if needed (leave empty if not needed) | |
 | UID | User Identifier | 99 |
 | GID | Group Identifier | 100 |
