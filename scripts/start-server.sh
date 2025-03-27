@@ -1,10 +1,10 @@
 #!/bin/bash
 CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f2-)"
-if [ ! -z "${STATIC_V}" ] && [ -z "${CUR_V}" ]; then
+if [ ! -z "${STATIC_V}" ] && [ "${CUR_V}" != "${STATIC_V}" ]; then
   echo "---Static version: ${STATIC_V} set!---"
   DL_URL="$(wget -qO- http://api.vintagestory.at/${VS_CHANNEL}.json | jq -r --arg version "${STATIC_V}" '.[$version].linuxserver.urls.cdn')"
   LAT_V="${STATIC_V}"
-elif [ ! -z "${STATIC_V}" ] && [ ! -z "${CUR_V}" ]; then
+elif [ ! -z "${STATIC_V}" ] && [ ! -z "${CUR_V}" ] && [ "${CUR_V}" == "${STATIC_V}" ]; then
   echo "---Static version: ${STATIC_V} locally found!---"
   LAT_V="${CUR_V}"
   DL_URL="local"
