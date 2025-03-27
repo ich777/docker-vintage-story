@@ -53,9 +53,6 @@ elif [ "${LAT_V}" != "${CUR_V}" ]; then
   touch ${DATA_DIR}/installed-${LAT_V}
 elif [ "${LAT_V}" == "${CUR_V}" ]; then
   echo "---Vintage Story version up-to-date---"
-else
-  echo "---Something went wrong, putting server in sleep mode---"
-  sleep infinity
 fi
 
 echo "---Preparing Server---"
