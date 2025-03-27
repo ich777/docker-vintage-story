@@ -1,52 +1,61 @@
 #!/bin/bash
-DL_URL="$(curl -s http://api.vintagestory.at/${VS_CHANNEL}.json | jq '.' | grep server | grep linux | grep local | head -1 | cut -d '"' -f4)"
-LAT_V=${DL_URL##*_}
 CUR_V="$(find ${DATA_DIR} -name installed-* | cut -d '-' -f2-)"
-if [ -z $LAT_V ]; then
-  if [ -z $CUR_V ]; then
-	  echo "---Something went wrong, can't get latest version and found no local version, putting server into sleep mode!---"
-	  sleep infinity    
+if [ ! -z "${STATIC_V}" ] && [ -z "${CUR_V}" ]; then
+  echo "---Static version: ${STATIC_V} set!---"
+  DL_URL="$(wget -qO- http://api.vintagestory.at/${VS_CHANNEL}.json | jq -r --arg version "${STATIC_V}" '.[$version].linuxserver.urls.cdn')"
+  LAT_V="${STATIC_V}"
+elif [ ! -z "${STATIC_V}" ] && [ ! -z "${CUR_V}" ]; then
+  echo "---Static version: ${STATIC_V} locally found!---"
+  LAT_V="${CUR_V}"
+  DL_URL="local"
+else
+  JSON="$(wget -qO- http://api.vintagestory.at/${VS_CHANNEL}.json)"
+  LAT_V="$(echo "${JSON}" | jq -r 'keys_unsorted[]' | head -1)"
+  DL_URL="$(echo "${JSON}" | jq -r --arg version "${LAT_V}" '.[$version].linuxserver.urls.cdn')"
+fi
+if [ -z "${DL_URL}" ]; then
+  if [ -z "${CUR_V}" ]; then
+    echo "---Something went wrong, can't get latest version and found no local version, putting server into sleep mode!---"
+    sleep infinity    
   fi
   echo "---Can't get lateste version but found local version, continuing with local version..."
-  LAT_V=$CUR_V
+  LAT_V="${CUR_V}"
 fi
 
 echo "---Version Check---"
-if [ "${DISABLE_UPDATES}" == "true" ]; then
-	echo "---Automatic Updates Disabled!---"
-elif [ -z "$CUR_V" ]; then
-	echo "---Vintage Story not found, downloading...---"
-	cd ${DATA_DIR}
-	rm -f ${DATA_DIR}/vintagestory-*
-	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-$LAT_V "$DL_URL" ; then
-		echo "---Successfully downloaded Vintage Story v${LAT_V%.tar.gz}---"
-	else
-		echo "---Can't download Vintage Story v${LAT_V%.tar.gz}, putting server into sleep mode!---"
-		sleep infinity
-	fi
-	tar -xvf ${DATA_DIR}/vintagestory-$LAT_V
-	rm ${DATA_DIR}/vintagestory-$LAT_V
-	touch ${DATA_DIR}/installed-${LAT_V%.tar.gz}
-elif [ "${LAT_V%.tar.gz}" != "$CUR_V" ]; then
-	echo "---Newer version found, installing!---"
-	rm ${DATA_DIR}/installed-$CUR_V
-	cd ${DATA_DIR}
-	find . -maxdepth 1 -not -name 'data' -print0 | xargs -0 -I {} rm -R {} 2&>/dev/null
-	rm -f ${DATA_DIR}/vintagestory-*
-	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-$LAT_V "$DL_URL" ; then
-		echo "---Successfully downloaded Vintage Story v${LAT_V%.tar.gz}---"
-	else
-		echo "---Can't download Vintage Story v${LAT_V%.tar.gz}, putting server into sleep mode!---"
-		sleep infinity
-	fi
-	tar -xvf ${DATA_DIR}/vintagestory-$LAT_V
-	rm ${DATA_DIR}/vintagestory-$LAT_V
-	touch ${DATA_DIR}/installed-${LAT_V%.tar.gz}
-elif [ "${LAT_V%.tar.gz}" == "$CUR_V" ]; then
-	echo "---Vintage Story version up-to-date---"
+if [ -z "${CUR_V}" ]; then
+  echo "---Vintage Story not found, downloading...---"
+  cd ${DATA_DIR}
+  rm -f ${DATA_DIR}/vintagestory-*
+  if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-${LAT_V} "${DL_URL}" ; then
+    echo "---Successfully downloaded Vintage Story v${LAT_V}---"
+  else
+    echo "---Can't download Vintage Story v${LAT_V}, putting server into sleep mode!---"
+    sleep infinity
+  fi
+  tar -xvf ${DATA_DIR}/vintagestory-${LAT_V}
+  rm ${DATA_DIR}/vintagestory-${LAT_V}
+  touch ${DATA_DIR}/installed-${LAT_V}
+elif [ "${LAT_V}" != "${CUR_V}" ]; then
+  echo "---Newer version found, installing!---"
+  rm ${DATA_DIR}/installed-${CUR_V}
+  cd ${DATA_DIR}
+  find . -maxdepth 1 -not -name 'data' -print0 | xargs -0 -I {} rm -R {} 2&>/dev/null
+  rm -f ${DATA_DIR}/vintagestory-*
+  if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/vintagestory-${LAT_V} "${DL_URL}" ; then
+    echo "---Successfully downloaded Vintage Story v${LAT_V}---"
+  else
+    echo "---Can't download Vintage Story v${LAT_V}, putting server into sleep mode!---"
+    sleep infinity
+  fi
+  tar -xvf ${DATA_DIR}/vintagestory-${LAT_V}
+  rm ${DATA_DIR}/vintagestory-${LAT_V}
+  touch ${DATA_DIR}/installed-${LAT_V}
+elif [ "${LAT_V}" == "${CUR_V}" ]; then
+  echo "---Vintage Story version up-to-date---"
 else
-	echo "---Something went wrong, putting server in sleep mode---"
-	sleep infinity
+  echo "---Something went wrong, putting server in sleep mode---"
+  sleep infinity
 fi
 
 echo "---Preparing Server---"
